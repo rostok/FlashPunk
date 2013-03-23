@@ -1,6 +1,9 @@
 ﻿package net.flashpunk.utils
 {
 	import flash.net.SharedObject;
+	import flash.utils.ByteArray;
+	//import mx.utils.Base64Encoder;
+	//import mx.utils.Base64Decoder;
 	
 	/**
 	 * Static helper class used for saving and loading data from stored cookies.
@@ -79,6 +82,21 @@
 			return String(read(name, defaultValue));
 		}
 		
+		// rostok
+		/**
+		 * Reads a ByteArray from the current data.
+		 * @param	name			Property to read.
+		 * @return	The property value, or empty ByteArray if the property is not assigned.
+		 */
+		public static function readByteArray(name:String):ByteArray
+		{
+			//var s:String = readString(name, "");
+			//var bd:Base64Decoder = new Base64Decoder();
+			//bd.decode(s);
+			//return bd.toByteArray();
+			return ByteArray(read(name, new ByteArray()));
+		}
+		
 		/**
 		 * Writes an int to the current data.
 		 * @param	name		Property to write.
@@ -119,6 +137,21 @@
 			_data[name] = value;
 		}
 		
+		// rostok
+		/**
+		 * Writes a ByteArray to the current data.
+		 * @param	name		Property to write.
+		 * @param	value		Value to write.
+		 */
+		public static function writeByteArray(name:String, value:ByteArray):void
+		{
+			//var be:Base64Encoder = new Base64Encoder();
+			//value.position = 0;
+			//be.encodeBytes(value);
+			//_data[name] = be.toString();
+			_data[name] = value;
+		}
+		
 		/** @private Reads a property from the data object. */
 		private static function read(name:String, defaultValue:*):*
 		{
@@ -137,6 +170,7 @@
 		
 		// Data information.
 		/** @private */ private static var _shared:SharedObject;
+		/** @private */ private static var _dir:String;
 		/** @private */ private static var _data:Object = { };
 		/** @private */ public static var prefix:String = "FlashPunk";
 		/** @private */ private static const DEFAULT_FILE:String = "_file";

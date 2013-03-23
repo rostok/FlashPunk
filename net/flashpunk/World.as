@@ -189,6 +189,21 @@
 			for each (e in list) remove(e);
 		}
 		
+		/* rostok 
+		 * removes all entities of type
+		 */ 
+		public function removeAllType(type:String):void
+		{
+			//if (_typeFirst[type])
+				//removeList( _typeFirst[type] );
+			var e:Entity = _typeFirst[type];
+			while (e)
+			{
+				remove(e);
+				e = e._typeNext;
+			}
+		}
+
 		/**
 		 * Adds an Entity to the World with the Graphic object.
 		 * @param	graphic		Graphic to assign the Entity.
@@ -1168,6 +1183,32 @@
 			return squarePoints(px, py, rx, ry);
 		}
 		
+		// PUNK UI
+		/**
+		 * Returns the Entity at front which collides with the point.
+		 * @param   x       X position
+		 * @param   y       Y position
+		 * @return The Entity at front which collides with the point, or null if not found.
+		 */
+		public function frontCollidePoint(x:Number, y:Number):Entity
+		{
+			var e:Entity,
+			i:int = 0,
+			l:int = _layerList.length;
+			do
+			{
+				e = _renderFirst[_layerList[i]];
+				while (e)
+				{
+					if(e.collidePoint(e.x, e.y, x, y)) return e;
+					e = e._renderNext
+				}
+				if(i > l) break;
+			}
+			while(++i);
+				return null;
+		}
+
 		// Adding and removal.
 		/** @private */	private var _add:Vector.<Entity> = new Vector.<Entity>;
 		/** @private */	private var _remove:Vector.<Entity> = new Vector.<Entity>;

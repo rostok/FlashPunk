@@ -14,6 +14,32 @@ package net.flashpunk.graphics
 	 */
 	public class Image extends Graphic
 	{
+		// rostok tint procs
+		public function normal():void 
+		{
+			color = 0x00FFFFFF;
+			tinting = 0.0;
+			tintMode = Image.TINTING_MULTIPLY
+		}
+		
+		// whiten the image 0-normal 1-full white
+		public function whiten(factor:Number):void 
+		{
+			factor = FP.clamp(factor, 0, 1);
+			color = 0xFFFFFF;
+			tinting = factor;
+			tintMode = factor;
+		}
+		
+		// darken the image 0-normal 1-full black
+		public function darken(factor:Number):void 
+		{
+			factor = FP.clamp(factor, 0, 1);
+			color = 0x000000;
+			tinting = factor;
+			tintMode = Image.TINTING_COLORIZE;
+		}
+		
 		/**
 		 * Rotation of the image, in degrees.
 		 */
@@ -368,6 +394,13 @@ package net.flashpunk.graphics
 		public function lock():void
 		{
 			_locked = true;
+		}
+		
+		// rostok
+		// get the source
+		public function getSource():BitmapData 
+		{
+			return _source;
 		}
 		
 		/**

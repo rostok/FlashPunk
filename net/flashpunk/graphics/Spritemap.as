@@ -206,6 +206,14 @@
 			updateBuffer();
 		}
 		
+		
+		// rostok
+		// returns current anim framecount
+		public function getCurrentAnimFrameCount():int
+		{
+			return _anim ? _anim._frameCount : 0;
+		}
+		
 		/**
 		 * Current index of the playing animation.
 		 */

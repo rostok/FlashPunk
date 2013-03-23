@@ -371,6 +371,40 @@
 			_target.draw(FP.sprite, null, null, blend);
 		}
 		
+		/** rostok
+		 * sets pixel
+		 */
+		public static function setPixel(x:int, y:int, color:uint = 0xFFFFFF):void
+		{
+			_target.setPixel32(x - _camera.x, y - _camera.y, color);
+		}
+		
+		/** rostok
+		 * gets pixel
+		 */
+		public static function getPixel(x:int, y:int):uint
+		{
+			return _target.getPixel32(x - _camera.x, y - _camera.y);
+		}
+	
+		/** rostok
+		 * draws capsule
+		 */ 
+		public static function drawCapsule(p1x:Number,p1y:Number,p2x:Number,p2y:Number,r:Number,c:int=0xFFFFFF):void 
+		{
+			Draw.circle(p1x, p1y, r, c);
+			Draw.circle(p2x, p2y, r, c);
+			var dx:Number = p1x - p2x;
+			var dy:Number = p1y - p2y;
+			var l:Number = Math.sqrt(dx*dx+dy*dy);
+			if (l > 0) {
+				dx *= r/l;
+				dy *= r/l;
+				Draw.line(p1x - dy, p1y + dx, p2x - dy, p2y + dx, c);
+				Draw.line(p1x + dy, p1y - dx, p2x + dy, p2y - dx, c);
+			}
+		}
+		
 		/**
 		 * Draws a quadratic curve.
 		 * @param	x1		X start.
