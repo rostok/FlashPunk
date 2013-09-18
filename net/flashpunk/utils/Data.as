@@ -38,6 +38,18 @@
 			_shared.flush(SIZE);
 		}
 		
+		// rostok
+		/**
+		 * Reads a Number from the current data.
+		 * @param	name			Property to read.
+		 * @param	defaultValue	Default value.
+		 * @return	The property value, or defaultValue if the property is not assigned.
+		 */
+		public static function readNumber(name:String, defaultValue:Number = 0):Number
+		{
+			return Number(read(name, defaultValue));
+		}
+
 		/**
 		 * Reads an int from the current data.
 		 * @param	name			Property to read.
@@ -95,6 +107,17 @@
 			//bd.decode(s);
 			//return bd.toByteArray();
 			return ByteArray(read(name, new ByteArray()));
+		}
+		
+		// rostok
+		/**
+		 * Writes a Number to the current data.
+		 * @param	name		Property to write.
+		 * @param	value		Value to write.
+		 */
+		public static function writeNumber(name:String, value:Number = 0):void
+		{
+			_data[name] = value;
 		}
 		
 		/**
