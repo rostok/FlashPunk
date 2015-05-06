@@ -1,13 +1,17 @@
 ﻿package net.flashpunk 
 {
 	import flash.events.Event;
+	import flash.events.SampleDataEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	/**
 	 * Sound effect object used to play embedded sounds.
+	 * 
+	 * Adjusted for looping and setting position based on Flixel's approach
 	 */
 	public class Sfx 
 	{
@@ -40,7 +44,7 @@
 		 * @param	vol		Volume factor, a value from 0 to 1.
 		 * @param	pan		Panning factor, a value from -1 to 1.
 		 */
-		public function play(vol:Number = 1, pan:Number = 0):void
+		public function play(vol:Number = 1, pan:Number = 0, position:Number=0, looping:Boolean = false):void
 		{
 			if (_channel) stop();
 			_pan = FP.clamp(pan, -1, 1);
@@ -49,14 +53,24 @@
 			_filteredVol = Math.max(0, _vol * getVolume(_type));
 			_transform.pan = _filteredPan;
 			_transform.volume = _filteredVol;
-			_channel = _sound.play(0, 0, _transform);
+			
+			if (looping)// for looping sounds or sounds which position may be adjusted
+			{
+				samplesTotal = sound.length * 44.1 - MAGIC_DELAY; //prevents any delay at the end of the track as well.
+				_in = _sound;
+				_sound = new Sound();
+				_sound.addEventListener( SampleDataEvent.SAMPLE_DATA, sampleData );
+			}
+			
+			_looping = looping;
+			this.position = position;
+			
+			_channel = _sound.play(0/*position*1000*/, looping ? int.MAX_VALUE : 0, _transform);
 			if (_channel)
 			{
 				addPlaying();
 				_channel.addEventListener(Event.SOUND_COMPLETE, onComplete);
 			}
-			_looping = false;
-			_position = 0;
 		}
 		
 		/**
@@ -64,9 +78,9 @@
 		 * @param	vol		Volume factor, a value from 0 to 1.
 		 * @param	pan		Panning factor, a value from -1 to 1.
 		 */
-		public function loop(vol:Number = 1, pan:Number = 0):void
+		public function loop(vol:Number = 1, pan:Number = 0, position:Number = 0):void
 		{
-			play(vol, pan);
+			play(vol, pan, position, true);
 			_looping = true;
 		}
 		
@@ -90,7 +104,7 @@
 		 */
 		public function resume():void
 		{
-			_channel = _sound.play(_position, 0, _transform);
+			_channel = _sound.play(_position, _looping ? int.MAX_VALUE : 0, _transform);
 			if (_channel)
 			{
 				addPlaying();
@@ -102,7 +116,7 @@
 		/** @private Event handler for sound completion. */
 		private function onComplete(e:Event = null):void
 		{
-			if (_looping) loop(_vol, _pan);
+			if (_looping) _looping=_looping;// loop(_vol, _pan);
 			else stop();
 			_position = 0;
 			if (complete != null) complete();
@@ -190,6 +204,20 @@
 		 */
 		public function get length():Number { return _sound.length / 1000; }
 		
+		public function get sound():Sound 
+		{
+			return _sound;
+		}
+		
+		/**
+		 * set position only for buffered sounds (looping==true)
+		 */
+		public function set position(value:Number):void 
+		{
+			_position = value;
+			samplesPosition = value / (_in ? _in.length / 1000 : length) * samplesTotal;
+		}
+		
 		/**
 		* Return the global pan for a type.
 		*/
@@ -235,6 +263,54 @@
 			for each (var sfx:Sfx in _typePlaying[type])
 			{
 				sfx.volume = sfx.volume;
+			}
+		}
+		
+		/*
+		 * A bunch of looping variables follow.
+		 */
+		protected const MAGIC_DELAY:Number = 2766.0; 	//THE MAGIC NUMBER
+		protected const bufferSize:int = 4096;			//this gives stable playback
+		protected var samplesTotal:int = 0;				//this _must_ be known about the song to be looped
+		protected var samplesPosition:int = 0;			//helper for reading the sound
+		protected var _in:Sound;
+		
+		//this is just forwarding the event and bufferSize to the extraction function.
+		protected function sampleData( event:SampleDataEvent ):void
+		{
+			extract( event.data, bufferSize );
+		}
+
+		/**
+		 * This methods extracts audio data from the mp3 and wraps it automatically with respect to encoder delay
+		 *
+		 * @param target The ByteArray where to write the audio data
+		 * @param length The amount of samples to be read
+		 */
+		protected function extract( target: ByteArray, length:int ):void
+		{
+			if (samplesTotal == 0) return;
+			while( 0 < length )
+			{
+				if( samplesPosition + length > samplesTotal )
+				{
+					var read: int = samplesTotal - samplesPosition;
+					_in.extract( target, read, samplesPosition + MAGIC_DELAY );
+					samplesPosition += read;
+					length -= read;
+				}
+				else
+				{
+					_in.extract( target, length, samplesPosition + MAGIC_DELAY );
+					samplesPosition += length;
+					length = 0;
+				}
+
+				if( samplesPosition == samplesTotal ) // WE ARE AT THE END OF THE LOOP > WRAP
+				{
+					samplesPosition = 0;
+					if (!_looping) length = 0;
+				}
 			}
 		}
 		

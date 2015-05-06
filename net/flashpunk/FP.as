@@ -70,7 +70,7 @@
 		/**
 		 * Time elapsed since the last frame (in seconds).
 		 */
-		public static var elapsed:Number;
+		public static var elapsed:Number = 0;
 		
 		/**
 		 * Timescale applied to FP.elapsed.
