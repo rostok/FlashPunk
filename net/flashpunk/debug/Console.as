@@ -117,31 +117,31 @@ package net.flashpunk.debug
 			// The entity count text.
 			_sprite.addChild(_entRead);
 			_entRead.addChild(_entReadText);
-			_entReadText.defaultTextFormat = format(16, 0xFFFFFF, "right");
+			_entReadText.defaultTextFormat = format(big ? 16 : 8, 0xFFFFFF, "right");
 			_entReadText.embedFonts = true;
 			_entReadText.width = 100;
-			_entReadText.height = 20;
+			_entReadText.height = big ? 20 : 10;
 			_entRead.x = width - _entReadText.width;
 			
 			// The entity count panel.
 			_entRead.graphics.clear();
 			_entRead.graphics.beginFill(0, .5);
-			_entRead.graphics.drawRoundRectComplex(0, 0, _entReadText.width, 20, 0, 0, 20, 0);
+			_entRead.graphics.drawRoundRectComplex(0, 0, _entReadText.width, big ? 20:10, 0, 0, big ? 20:10, 0);
 			
 			// The FPS text.
 			_sprite.addChild(_fpsRead);
 			_fpsRead.addChild(_fpsReadText);
-			_fpsReadText.defaultTextFormat = format(16);
+			_fpsReadText.defaultTextFormat = format(big ? 16 : 8);
 			_fpsReadText.embedFonts = true;
 			_fpsReadText.width = 70;
-			_fpsReadText.height = 20;
+			_fpsReadText.height = big ? 20:10;
 			_fpsReadText.x = 2;
 			_fpsReadText.y = 1;
 			
 			// The FPS and frame timing panel.
 			_fpsRead.graphics.clear();
 			_fpsRead.graphics.beginFill(0, .75);
-			_fpsRead.graphics.drawRoundRectComplex(0, 0, big ? 320 : 160, 20, 0, 0, 0, 20);
+			_fpsRead.graphics.drawRoundRectComplex(0, 0, big ? 320 : 160, big ? 20:10, 0, 0, 0, big ? 20:10);
 			
 			// The frame timing text.
 			if (big) _sprite.addChild(_fpsInfo);
@@ -152,16 +152,16 @@ package net.flashpunk.debug
 			_fpsInfoText0.embedFonts = true;
 			_fpsInfoText1.embedFonts = true;
 			_fpsInfoText0.width = _fpsInfoText1.width = 60;
-			_fpsInfoText0.height = _fpsInfoText1.height = 20;
+			_fpsInfoText0.height = _fpsInfoText1.height = big ? 20:10;
 			_fpsInfo.x = 75;
 			_fpsInfoText1.x = 60;
 			
 			// The memory usage
 			_fpsRead.addChild(_memReadText);
-			_memReadText.defaultTextFormat = format(16);
+			_memReadText.defaultTextFormat = format(big ? 16 : 8);
 			_memReadText.embedFonts = true;
 			_memReadText.width = 110;
-			_memReadText.height = 20;
+			_memReadText.height = big ? 20:10;
 			_memReadText.x = _fpsInfo.x + _fpsInfo.width + 5;
 			_memReadText.y = 1;
 			
@@ -169,13 +169,13 @@ package net.flashpunk.debug
 			_sprite.addChild(_logRead);
 			_logRead.addChild(_logReadText0);
 			_logRead.addChild(_logReadText1);
-			_logReadText0.defaultTextFormat = format(16, 0xFFFFFF);
+			_logReadText0.defaultTextFormat = format(big ? 16 : 8, 0xFFFFFF);
 			_logReadText1.defaultTextFormat = format(big ? 16 : 8, 0xFFFFFF);
 			_logReadText0.embedFonts = true;
 			_logReadText1.embedFonts = true;
 			_logReadText0.selectable = false;
 			_logReadText0.width = 80;
-			_logReadText0.height = 20;
+			_logReadText0.height = big ? 20:10;
 			_logReadText1.width = width;
 			_logReadText0.x = 2;
 			_logReadText0.y = 3;
@@ -191,13 +191,13 @@ package net.flashpunk.debug
 			_sprite.addChild(_debRead);
 			_debRead.addChild(_debReadText0);
 			_debRead.addChild(_debReadText1);
-			_debReadText0.defaultTextFormat = format(16, 0xFFFFFF);
+			_debReadText0.defaultTextFormat = format(big ? 16 : 8, 0xFFFFFF);
 			_debReadText1.defaultTextFormat = format(8, 0xFFFFFF);
 			_debReadText0.embedFonts = true;
 			_debReadText1.embedFonts = true;
 			_debReadText0.selectable = false;
 			_debReadText0.width = 80;
-			_debReadText0.height = 20;
+			_debReadText0.height = big ? 20:10;
 			_debReadText1.width = 160;
 			_debReadText1.height = int(height / 4);
 			_debReadText0.x = 2;
@@ -219,7 +219,7 @@ package net.flashpunk.debug
 			// The button panel.
 			_butRead.graphics.clear();
 			_butRead.graphics.beginFill(0, .75);
-			_butRead.graphics.drawRoundRectComplex(-20, 0, 100, 20, 0, 0, 20, 20);
+			_butRead.graphics.drawRoundRectComplex(-(big ? 20:10), 0, 100, (big ? 20:10), 0, 0, (big ? 20:10), (big ? 20:10));
 			
 			// Default the display to debug view
 			debug = true;
@@ -637,12 +637,15 @@ package net.flashpunk.debug
 			// If the console is paused.
 			if (_paused)
 			{
+				// Used to determine some text sizing.
+				var big:Boolean = width >= 480;
+				
 				// Draw the log panel.
 				_logRead.y = 40;
 				_logRead.graphics.clear();
 				_logRead.graphics.beginFill(0, .75);
-				_logRead.graphics.drawRoundRectComplex(0, 0, _logReadText0.width, 20, 0, 20, 0, 0);
-				_logRead.graphics.drawRect(0, 20, width, _logHeight);
+				_logRead.graphics.drawRoundRectComplex(0, 0, _logReadText0.width, (big ? 20:10), 0, (big ? 20:10), 0, 0);
+				_logRead.graphics.drawRect(0, (big ? 20:10), width, _logHeight);
 				
 				// Draw the log scrollbar.
 				_logRead.graphics.beginFill(0x202020, 1);
@@ -691,12 +694,12 @@ package net.flashpunk.debug
 			else
 			{
 				// Draw the single-line log panel.
-				_logRead.y = height - 40;
-				_logReadText1.height = 20;
+				_logRead.y = height - (big ? 20:10)*2;
+				_logReadText1.height = (big ? 20:10);
 				_logRead.graphics.clear();
 				_logRead.graphics.beginFill(0, .75);
-				_logRead.graphics.drawRoundRectComplex(0, 0, _logReadText0.width, 20, 0, 20, 0, 0);
-				_logRead.graphics.drawRect(0, 20, width, 20);
+				_logRead.graphics.drawRoundRectComplex(0, 0, _logReadText0.width, (big ? 20:10), 0, (big ? 20:10), 0, 0);
+				_logRead.graphics.drawRect(0, (big ? 20:10), width, (big ? 20:10));
 				
 				// Draw the single-line log text with the latests logged text.
 				_logReadText1.text = LOG.length ? LOG[LOG.length - 1] : "";
@@ -765,8 +768,8 @@ package net.flashpunk.debug
 			_debRead.y = int(height - _debReadText1.height);
 			_debRead.graphics.clear();
 			_debRead.graphics.beginFill(0, .75);
-			_debRead.graphics.drawRoundRectComplex(0, 0, _debReadText0.width, 20, 0, 20, 0, 0);
-			_debRead.graphics.drawRoundRectComplex(0, 20, _debReadText1.width + 20, height - _debRead.y - 20, 0, 20, 0, 0);
+			_debRead.graphics.drawRoundRectComplex(0, 0, _debReadText0.width, (big ? 20:10), 0, (big ? 20:10), 0, 0);
+			_debRead.graphics.drawRoundRectComplex(0, (big ? 20:10), _debReadText1.width + (big ? 20:10), height - _debRead.y - (big ? 20:10), 0, (big ? 20:10), 0, 0);
 		}
 		
 		/** @private Updates the Entity count text. */
