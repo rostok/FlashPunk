@@ -373,11 +373,27 @@
 		}
 		
 		/** rostok
+		 * sets pixel 32
+		 */
+		public static function setPixel32(x:int, y:int, color:uint = 0xFFFFFF):void
+		{
+			_target.setPixel32(x - _camera.x, y - _camera.y, color);
+		}
+		
+		/** rostok
+		 * gets pixel 32
+		 */
+		public static function getPixel32(x:int, y:int):uint
+		{
+			return _target.getPixel32(x - _camera.x, y - _camera.y);
+		}
+		
+		/** rostok
 		 * sets pixel
 		 */
 		public static function setPixel(x:int, y:int, color:uint = 0xFFFFFF):void
 		{
-			_target.setPixel32(x - _camera.x, y - _camera.y, color);
+			_target.setPixel(x - _camera.x, y - _camera.y, color);
 		}
 		
 		/** rostok
@@ -385,7 +401,7 @@
 		 */
 		public static function getPixel(x:int, y:int):uint
 		{
-			return _target.getPixel32(x - _camera.x, y - _camera.y);
+			return _target.getPixel(x - _camera.x, y - _camera.y);
 		}
 	
 		/** rostok

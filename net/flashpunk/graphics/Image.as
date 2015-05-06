@@ -253,6 +253,12 @@ package net.flashpunk.graphics
 			_buffer.fillRect(_bufferRect, color);
 		}
 		
+		// gets buffer
+		public function getBuffer():BitmapData
+		{
+			return _buffer;
+		}		
+		
 		/**
 		 * Change the opacity of the Image, a value from 0 to 1.
 		 */

@@ -241,6 +241,7 @@
 				FP.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 				FP.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				// right mouse button
+				
 				FP.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleMouseDown);
 				FP.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleMouseUp);
 				FP.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onRightMouseDown);

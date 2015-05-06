@@ -56,6 +56,14 @@
 		 */
 		public function get loop():Boolean { return _loop; }
 		
+		/**
+		 * rostok - allow to set if the anim loops
+		 */
+		public function set loop(value:Boolean):void 
+		{
+			_loop = value;
+		}
+		
 		/** @private */ internal var _parent:Spritemap;
 		/** @private */ internal var _name:String;
 		/** @private */ internal var _frames:Array;

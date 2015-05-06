@@ -11,8 +11,6 @@ package net.flashpunk.debug
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 
-	import flash.system.System;
-	import flash.ui.Mouse;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Text;
@@ -68,23 +66,21 @@ package net.flashpunk.debug
 		}
 		
 		/**
-		 * rostok
-		 * 
 		 * Adds properties to watch in the console's debug panel.
-		 * @param	...properties		The properties (strings) to watch.
+		 * @param	properties		The properties (strings) to watch.
 		 */
 		public function watch(...properties):void
 		{
 			var i:String;
 			if (properties.length > 1)
 			{
-				for each (i in properties) if (WATCH_LIST.lastIndexOf(i)<0) WATCH_LIST.push(i);
+				for each (i in properties) WATCH_LIST.push(i);
 			}
 			else if (properties[0] is Array || properties[0] is Vector.<*>)
 			{
-				for each (i in properties[0]) if (WATCH_LIST.lastIndexOf(i)<0) WATCH_LIST.push(i);
+				for each (i in properties[0]) WATCH_LIST.push(i);
 			}
-			else if (WATCH_LIST.lastIndexOf(i)<0) WATCH_LIST.push(properties[0]);
+			else WATCH_LIST.push(properties[0]);
 		}
 		
 		/**
@@ -341,10 +337,6 @@ package net.flashpunk.debug
 		{
 			// Quit if the console isn't enabled.
 			if (!_enabled) return;
-			
-			// rostok
-			if (value) Mouse.show();
-			else Mouse.hide();
 			
 			// Set the console to paused.
 			_paused = value;
@@ -900,7 +892,7 @@ package net.flashpunk.debug
 		/** @private */ private const SELECT_LIST:Vector.<Entity> = new Vector.<Entity>;
 		
 		// Watch information.
-		/** @private */ private const WATCH_LIST:Vector.<String> = Vector.<String>(["x", "y", "layer"]);
+		/** @private */ private const WATCH_LIST:Vector.<String> = Vector.<String>(["x", "y"]);
 		
 		// Embedded assets.
 		[Embed(source = 'console_logo.png')] private const CONSOLE_LOGO:Class;

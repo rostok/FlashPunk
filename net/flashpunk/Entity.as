@@ -5,9 +5,9 @@ package net.flashpunk
 	import flash.geom.Rectangle;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	
+
 	import net.flashpunk.graphics.*;
-	
+
 	/**
 	 * Main game Entity class updated by World.
 	 */
@@ -65,14 +65,12 @@ package net.flashpunk
 		 * @param	graphic		Graphic to assign to the Entity.
 		 * @param	mask		Mask to assign to the Entity.
 		 */
-		public function Entity(x:Number = 0, y:Number = 0, graphic:Graphic = null, mask:Mask = null)
+		public function Entity(x:Number = 0, y:Number = 0, graphic:Graphic = null, mask:Mask = null) 
 		{
 			this.x = x;
 			this.y = y;
-			if (graphic)
-				this.graphic = graphic;
-			if (mask)
-				this.mask = mask;
+			if (graphic) this.graphic = graphic;
+			if (mask) this.mask = mask;
 			HITBOX.assignTo(this);
 			_class = Class(getDefinitionByName(getQualifiedClassName(this)));
 		}
@@ -82,7 +80,7 @@ package net.flashpunk
 		 */
 		public function added():void
 		{
-		
+			
 		}
 		
 		/**
@@ -90,22 +88,22 @@ package net.flashpunk
 		 */
 		public function removed():void
 		{
-		
+			
 		}
 		
 		/**
 		 * Updates the Entity.
 		 */
-		override public function update():void
+		override public function update():void 
 		{
-		
+			
 		}
 		
 		/**
 		 * Renders the Entity. If you override this for special behaviour,
 		 * remember to call super.render() to render the Entity's graphic.
 		 */
-		public function render():void
+		public function render():void 
 		{
 			if (_graphic && _graphic.visible)
 			{
@@ -114,8 +112,7 @@ package net.flashpunk
 					_point.x = x;
 					_point.y = y;
 				}
-				else
-					_point.x = _point.y = 0;
+				else _point.x = _point.y = 0;
 				_camera.x = _world ? _world.camera.x : FP.camera.x;
 				_camera.y = _world ? _world.camera.y : FP.camera.y;
 				_graphic.render(renderTarget ? renderTarget : FP.buffer, _point, _camera);
@@ -131,53 +128,53 @@ package net.flashpunk
 		 */
 		public function collide(type:String, x:Number, y:Number):Entity
 		{
-			if (!_world)
-				return null;
+			if (!_world) return null;
 			
 			var e:Entity = _world._typeFirst[type];
-			if (!e)
-				return null;
+			if (!e) return null;
 			
-			_x = this.x;
-			_y = this.y;
-			this.x = x;
-			this.y = y;
+			_x = this.x; _y = this.y;
+			this.x = x; this.y = y;
 			
 			if (!_mask)
 			{
 				while (e)
 				{
-					if (e.collidable && e !== this && x - originX + width > e.x - e.originX && y - originY + height > e.y - e.originY && x - originX < e.x - e.originX + e.width && y - originY < e.y - e.originY + e.height)
+					if (e.collidable && e !== this
+					&& x - originX + width > e.x - e.originX
+					&& y - originY + height > e.y - e.originY
+					&& x - originX < e.x - e.originX + e.width
+					&& y - originY < e.y - e.originY + e.height)
 					{
 						if (!e._mask || e._mask.collide(HITBOX))
 						{
-							this.x = _x;
-							this.y = _y;
+							this.x = _x; this.y = _y;
 							return e;
 						}
 					}
 					e = e._typeNext;
 				}
-				this.x = _x;
-				this.y = _y;
+				this.x = _x; this.y = _y;
 				return null;
 			}
 			
 			while (e)
 			{
-				if (e.collidable && e !== this && x - originX + width > e.x - e.originX && y - originY + height > e.y - e.originY && x - originX < e.x - e.originX + e.width && y - originY < e.y - e.originY + e.height)
+				if (e.collidable && e !== this
+				&& x - originX + width > e.x - e.originX
+				&& y - originY + height > e.y - e.originY
+				&& x - originX < e.x - e.originX + e.width
+				&& y - originY < e.y - e.originY + e.height)
 				{
 					if (_mask.collide(e._mask ? e._mask : e.HITBOX))
 					{
-						this.x = _x;
-						this.y = _y;
+						this.x = _x; this.y = _y;
 						return e;
 					}
 				}
 				e = e._typeNext;
 			}
-			this.x = _x;
-			this.y = _y;
+			this.x = _x; this.y = _y;
 			return null;
 		}
 		
@@ -190,21 +187,16 @@ package net.flashpunk
 		 */
 		public function collideTypes(types:Object, x:Number, y:Number):Entity
 		{
-			if (!_world)
-				return null;
+			if (!_world) return null;
 			
 			var e:Entity;
 			
-			if (types is String)
-			{
+			if (types is String) {
 				return collide(String(types), x, y);
-			}
-			else if (types is Array || types is Vector.<String>)
-			{
+			} else if (types is Array || types is Vector.<String>) {
 				for each (var type:String in types)
 				{
-					if ((e = collide(type, x, y)))
-						return e;
+					if ((e = collide(type, x, y))) return e;
 				}
 			}
 			
@@ -220,34 +212,32 @@ package net.flashpunk
 		 */
 		public function collideWith(e:Entity, x:Number, y:Number):Entity
 		{
-			_x = this.x;
-			_y = this.y;
-			this.x = x;
-			this.y = y;
+			_x = this.x; _y = this.y;
+			this.x = x; this.y = y;
 			
-			if (e.collidable && x - originX + width > e.x - e.originX && y - originY + height > e.y - e.originY && x - originX < e.x - e.originX + e.width && y - originY < e.y - e.originY + e.height)
+			if (e.collidable
+			&& x - originX + width > e.x - e.originX
+			&& y - originY + height > e.y - e.originY
+			&& x - originX < e.x - e.originX + e.width
+			&& y - originY < e.y - e.originY + e.height)
 			{
 				if (!_mask)
 				{
 					if (!e._mask || e._mask.collide(HITBOX))
 					{
-						this.x = _x;
-						this.y = _y;
+						this.x = _x; this.y = _y;
 						return e;
 					}
-					this.x = _x;
-					this.y = _y;
+					this.x = _x; this.y = _y;
 					return null;
 				}
 				if (_mask.collide(e._mask ? e._mask : e.HITBOX))
 				{
-					this.x = _x;
-					this.y = _y;
+					this.x = _x; this.y = _y;
 					return e;
 				}
 			}
-			this.x = _x;
-			this.y = _y;
+			this.x = _x; this.y = _y;
 			return null;
 		}
 		
@@ -263,26 +253,22 @@ package net.flashpunk
 		 */
 		public function collideRect(x:Number, y:Number, rX:Number, rY:Number, rWidth:Number, rHeight:Number):Boolean
 		{
-			if (x - originX + width >= rX && y - originY + height >= rY && x - originX <= rX + rWidth && y - originY <= rY + rHeight)
+			if (x - originX + width >= rX && y - originY + height >= rY
+			&& x - originX <= rX + rWidth && y - originY <= rY + rHeight)
 			{
-				if (!_mask)
-					return true;
-				_x = this.x;
-				_y = this.y;
-				this.x = x;
-				this.y = y;
+				if (!_mask) return true;
+				_x = this.x; _y = this.y;
+				this.x = x; this.y = y;
 				FP.entity.x = rX;
 				FP.entity.y = rY;
 				FP.entity.width = rWidth;
 				FP.entity.height = rHeight;
 				if (_mask.collide(FP.entity.HITBOX))
 				{
-					this.x = _x;
-					this.y = _y;
+					this.x = _x; this.y = _y;
 					return true;
 				}
-				this.x = _x;
-				this.y = _y;
+				this.x = _x; this.y = _y;
 				return false;
 			}
 			return false;
@@ -298,26 +284,22 @@ package net.flashpunk
 		 */
 		public function collidePoint(x:Number, y:Number, pX:Number, pY:Number):Boolean
 		{
-			if (pX >= x - originX && pY >= y - originY && pX < x - originX + width && pY < y - originY + height)
+			if (pX >= x - originX && pY >= y - originY
+			&& pX < x - originX + width && pY < y - originY + height)
 			{
-				if (!_mask)
-					return true;
-				_x = this.x;
-				_y = this.y;
-				this.x = x;
-				this.y = y;
+				if (!_mask) return true;
+				_x = this.x; _y = this.y;
+				this.x = x; this.y = y;
 				FP.entity.x = pX;
 				FP.entity.y = pY;
 				FP.entity.width = 1;
 				FP.entity.height = 1;
 				if (_mask.collide(FP.entity.HITBOX))
 				{
-					this.x = _x;
-					this.y = _y;
+					this.x = _x; this.y = _y;
 					return true;
 				}
-				this.x = _x;
-				this.y = _y;
+				this.x = _x; this.y = _y;
 				return false;
 			}
 			return false;
@@ -384,46 +366,46 @@ package net.flashpunk
 		 */
 		public function collideInto(type:String, x:Number, y:Number, array:Object):void
 		{
-			if (!_world)
-				return;
+			if (!_world) return;
 			
 			var e:Entity = _world._typeFirst[type];
-			if (!e)
-				return;
+			if (!e) return;
 			
-			_x = this.x;
-			_y = this.y;
-			this.x = x;
-			this.y = y;
+			_x = this.x; _y = this.y;
+			this.x = x; this.y = y;
 			var n:uint = array.length;
 			
 			if (!_mask)
 			{
 				while (e)
 				{
-					if (e.collidable && e !== this && x - originX + width > e.x - e.originX && y - originY + height > e.y - e.originY && x - originX < e.x - e.originX + e.width && y - originY < e.y - e.originY + e.height)
+					if (e.collidable && e !== this
+					&& x - originX + width > e.x - e.originX
+					&& y - originY + height > e.y - e.originY
+					&& x - originX < e.x - e.originX + e.width
+					&& y - originY < e.y - e.originY + e.height)
 					{
-						if (!e._mask || e._mask.collide(HITBOX))
-							array[n++] = e;
+						if (!e._mask || e._mask.collide(HITBOX)) array[n ++] = e;
 					}
 					e = e._typeNext;
 				}
-				this.x = _x;
-				this.y = _y;
+				this.x = _x; this.y = _y;
 				return;
 			}
 			
 			while (e)
 			{
-				if (e.collidable && e !== this && x - originX + width > e.x - e.originX && y - originY + height > e.y - e.originY && x - originX < e.x - e.originX + e.width && y - originY < e.y - e.originY + e.height)
+				if (e.collidable && e !== this
+				&& x - originX + width > e.x - e.originX
+				&& y - originY + height > e.y - e.originY
+				&& x - originX < e.x - e.originX + e.width
+				&& y - originY < e.y - e.originY + e.height)
 				{
-					if (_mask.collide(e._mask ? e._mask : e.HITBOX))
-						array[n++] = e;
+					if (_mask.collide(e._mask ? e._mask : e.HITBOX)) array[n ++] = e;
 				}
 				e = e._typeNext;
 			}
-			this.x = _x;
-			this.y = _y;
+			this.x = _x; this.y = _y;
 			return;
 		}
 		
@@ -437,10 +419,8 @@ package net.flashpunk
 		 */
 		public function collideTypesInto(types:Object, x:Number, y:Number, array:Object):void
 		{
-			if (!_world)
-				return;
-			for each (var type:String in types)
-				collideInto(type, x, y, array);
+			if (!_world) return;
+			for each (var type:String in types) collideInto(type, x, y, array);
 		}
 		
 		/**
@@ -462,79 +442,50 @@ package net.flashpunk
 		/**
 		 * Half the Entity's width.
 		 */
-		public function get halfWidth():Number
-		{
-			return width / 2;
-		}
+		public function get halfWidth():Number { return width / 2; }
 		
 		/**
 		 * Half the Entity's height.
 		 */
-		public function get halfHeight():Number
-		{
-			return height / 2;
-		}
+		public function get halfHeight():Number { return height / 2; }
 		
 		/**
 		 * The center x position of the Entity's hitbox.
 		 */
-		public function get centerX():Number
-		{
-			return x - originX + width / 2;
-		}
+		public function get centerX():Number { return x - originX + width / 2; }
 		
 		/**
 		 * The center y position of the Entity's hitbox.
 		 */
-		public function get centerY():Number
-		{
-			return y - originY + height / 2;
-		}
+		public function get centerY():Number { return y - originY + height / 2; }
 		
 		/**
 		 * The leftmost position of the Entity's hitbox.
 		 */
-		public function get left():Number
-		{
-			return x - originX;
-		}
+		public function get left():Number { return x - originX; }
 		
 		/**
 		 * The rightmost position of the Entity's hitbox.
 		 */
-		public function get right():Number
-		{
-			return x - originX + width;
-		}
+		public function get right():Number { return x - originX + width; }
 		
 		/**
 		 * The topmost position of the Entity's hitbox.
 		 */
-		public function get top():Number
-		{
-			return y - originY;
-		}
+		public function get top():Number { return y - originY; }
 		
 		/**
 		 * The bottommost position of the Entity's hitbox.
 		 */
-		public function get bottom():Number
-		{
-			return y - originY + height;
-		}
+		public function get bottom():Number { return y - originY + height; }
 		
 		/**
 		 * The rendering layer of this Entity. Higher layers are rendered first.
 		 */
-		public function get layer():int
-		{
-			return _layer;
-		}
-		
+		public function get layer():int { return _layer; }
 		public function set layer(value:int):void
 		{
-			if (_layer == value)
-				return;
+			if (_layer == value) return;
 			if (!_world)
 			{
 				_layer = value;
@@ -548,62 +499,42 @@ package net.flashpunk
 		/**
 		 * The collision type, used for collision checking.
 		 */
-		public function get type():String
-		{
-			return _type;
-		}
-		
+		public function get type():String { return _type; }
 		public function set type(value:String):void
 		{
-			if (_type == value)
-				return;
+			if (_type == value) return;
 			if (!_world)
 			{
 				_type = value;
 				return;
 			}
-			if (_type)
-				_world.removeType(this);
+			if (_type) _world.removeType(this);
 			_type = value;
-			if (value)
-				_world.addType(this);
+			if (value) _world.addType(this);
 		}
 		
 		/**
 		 * An optional Mask component, used for specialized collision. If this is
 		 * not assigned, collision checks will use the Entity's hitbox by default.
 		 */
-		public function get mask():Mask
-		{
-			return _mask;
-		}
-		
+		public function get mask():Mask { return _mask; }
 		public function set mask(value:Mask):void
 		{
-			if (_mask == value)
-				return;
-			if (_mask)
-				_mask.assignTo(null);
+			if (_mask == value) return;
+			if (_mask) _mask.assignTo(null);
 			_mask = value;
-			if (value)
-				_mask.assignTo(this);
+			if (value) _mask.assignTo(this);
 		}
 		
 		/**
 		 * Graphical component to render to the screen.
 		 */
-		public function get graphic():Graphic
-		{
-			return _graphic;
-		}
-		
+		public function get graphic():Graphic { return _graphic; }
 		public function set graphic(value:Graphic):void
 		{
-			if (_graphic == value)
-				return;
+			if (_graphic == value) return;
 			_graphic = value;
-			if (value && value._assign != null)
-				value._assign();
+			if (value && value._assign != null) value._assign();
 		}
 		
 		/**
@@ -612,13 +543,11 @@ package net.flashpunk
 		 */
 		public function addGraphic(g:Graphic):Graphic
 		{
-			if (graphic is Graphiclist)
-				(graphic as Graphiclist).add(g);
+			if (graphic is Graphiclist) (graphic as Graphiclist).add(g);
 			else
 			{
 				var list:Graphiclist = new Graphiclist;
-				if (graphic)
-					list.add(graphic);
+				if (graphic) list.add(graphic);
 				list.add(g);
 				graphic = list;
 			}
@@ -646,22 +575,15 @@ package net.flashpunk
 		 */
 		public function setHitboxTo(o:Object):void
 		{
-			if (o is Image || o is Rectangle)
-				setHitbox(o.width, o.height, -o.x, -o.y);
+			if (o is Image || o is Rectangle) setHitbox(o.width, o.height, -o.x, -o.y);
 			else
 			{
-				if (o.hasOwnProperty("width"))
-					width = o.width;
-				if (o.hasOwnProperty("height"))
-					height = o.height;
-				if (o.hasOwnProperty("originX") && !(o is Graphic))
-					originX = o.originX;
-				else if (o.hasOwnProperty("x"))
-					originX = -o.x;
-				if (o.hasOwnProperty("originY") && !(o is Graphic))
-					originY = o.originY;
-				else if (o.hasOwnProperty("y"))
-					originY = -o.y;
+				if (o.hasOwnProperty("width")) width = o.width;
+				if (o.hasOwnProperty("height")) height = o.height;
+				if (o.hasOwnProperty("originX") && !(o is Graphic)) originX = o.originX;
+				else if (o.hasOwnProperty("x")) originX = -o.x;
+				if (o.hasOwnProperty("originY") && !(o is Graphic)) originY = o.originY;
+				else if (o.hasOwnProperty("y")) originY = -o.y;
 			}
 		}
 		
@@ -693,8 +615,7 @@ package net.flashpunk
 		 */
 		public function distanceFrom(e:Entity, useHitboxes:Boolean = false):Number
 		{
-			if (!useHitboxes)
-				return Math.sqrt((x - e.x) * (x - e.x) + (y - e.y) * (y - e.y));
+			if (!useHitboxes) return Math.sqrt((x - e.x) * (x - e.x) + (y - e.y) * (y - e.y));
 			return FP.distanceRects(x - originX, y - originY, width, height, e.x - e.originX, e.y - e.originY, e.width, e.height);
 		}
 		
@@ -707,8 +628,7 @@ package net.flashpunk
 		 */
 		public function distanceToPoint(px:Number, py:Number, useHitbox:Boolean = false):Number
 		{
-			if (!useHitbox)
-				return Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
+			if (!useHitbox) return Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
 			return FP.distanceRectPoint(px, py, x - originX, y - originY, width, height);
 		}
 		
@@ -762,18 +682,14 @@ package net.flashpunk
 						{
 							if ((e = collideTypes(solidType, this.x + sign, this.y)))
 							{
-								if (moveCollideX(e))
-									break;
-								else
-									this.x += sign;
+								if (moveCollideX(e)) break;
+								else this.x += sign;
 							}
-							else
-								this.x += sign;
+							else this.x += sign;
 							x -= sign;
 						}
 					}
-					else
-						this.x += x;
+					else this.x += x;
 				}
 				if (y != 0)
 				{
@@ -784,18 +700,14 @@ package net.flashpunk
 						{
 							if ((e = collideTypes(solidType, this.x, this.y + sign)))
 							{
-								if (moveCollideY(e))
-									break;
-								else
-									this.y += sign;
+								if (moveCollideY(e)) break;
+								else this.y += sign;
 							}
-							else
-								this.y += sign;
+							else this.y += sign;
 							y -= sign;
 						}
 					}
-					else
-						this.y += y;
+					else this.y += y;
 				}
 			}
 			else
@@ -830,8 +742,7 @@ package net.flashpunk
 			_point.x = x - this.x;
 			_point.y = y - this.y;
 			
-			if (_point.x * _point.x + _point.y * _point.y > amount * amount)
-			{
+			if (_point.x*_point.x + _point.y*_point.y > amount*amount) {
 				_point.normalize(amount);
 			}
 			
@@ -864,10 +775,8 @@ package net.flashpunk
 		 */
 		public function clampHorizontal(left:Number, right:Number, padding:Number = 0):void
 		{
-			if (x - originX < left + padding)
-				x = left + originX + padding;
-			if (x - originX + width > right - padding)
-				x = right - width + originX - padding;
+			if (x - originX < left + padding) x = left + originX + padding;
+			if (x - originX + width > right - padding) x = right - width + originX - padding;
 		}
 		
 		/**
@@ -878,83 +787,50 @@ package net.flashpunk
 		 */
 		public function clampVertical(top:Number, bottom:Number, padding:Number = 0):void
 		{
-			if (y - originY < top + padding)
-				y = top + originY + padding;
-			if (y - originY + height > bottom - padding)
-				y = bottom - height + originY - padding;
+			if (y - originY < top + padding) y = top + originY + padding;
+			if (y - originY + height > bottom - padding) y = bottom - height + originY - padding;
 		}
 		
 		/**
 		 * The Entity's instance name. Use this to uniquely identify single
 		 * game Entities, which can then be looked-up with World.getInstance().
 		 */
-		public function get name():String
-		{
-			return _name;
-		}
-		
+		public function get name():String { return _name; }
 		public function set name(value:String):void
 		{
-			if (_name == value)
-				return;
-			if (_name && _world)
-				_world.unregisterName(this);
+			if (_name == value) return;
+			if (_name && _world) _world.unregisterName(this);
 			_name = value;
-			if (_name && _world)
-				_world.registerName(this);
+			if (_name && _world) _world.registerName(this);
 		}
 		
-		public function getClass():Class
-		{
-			return _class;
-		}
+		public function getClass ():Class { return _class; }
 		
 		// Entity information.
-		/** @private */
-		internal var _class:Class;
-		/** @private */
-		internal var _world:World;
-		/** @private */
-		internal var _type:String;
-		/** @private */
-		internal var _name:String;
-		/** @private */
-		internal var _layer:int;
-		/** @private */
-		internal var _updatePrev:Entity;
-		/** @private */
-		internal var _updateNext:Entity;
-		/** @private */
-		internal var _renderPrev:Entity;
-		/** @private */
-		internal var _renderNext:Entity;
-		/** @private */
-		internal var _typePrev:Entity;
-		/** @private */
-		internal var _typeNext:Entity;
-		/** @private */
-		internal var _recycleNext:Entity;
+		/** @private */ internal var _class:Class;
+		/** @private */ internal var _world:World;
+		/** @private */ internal var _type:String;
+		/** @private */ internal var _name:String;
+		/** @private */ internal var _layer:int;
+		/** @private */ internal var _updatePrev:Entity;
+		/** @private */ internal var _updateNext:Entity;
+		/** @private */ internal var _renderPrev:Entity;
+		/** @private */ internal var _renderNext:Entity;
+		/** @private */ internal var _typePrev:Entity;
+		/** @private */ internal var _typeNext:Entity;
+		/** @private */ internal var _recycleNext:Entity;
 		
 		// Collision information.
-		/** @private */
-		private const HITBOX:Mask = new Mask;
-		/** @private */
-		private var _mask:Mask;
-		/** @private */
-		private var _x:Number;
-		/** @private */
-		private var _y:Number;
-		/** @private */
-		private var _moveX:Number = 0;
-		/** @private */
-		private var _moveY:Number = 0;
+		/** @private */ private const HITBOX:Mask = new Mask;
+		/** @private */ private var _mask:Mask;
+		/** @private */ private var _x:Number;
+		/** @private */ private var _y:Number;
+		/** @private */ private var _moveX:Number = 0;
+		/** @private */ private var _moveY:Number = 0;
 		
 		// Rendering information.
-		/** @private */
-		internal var _graphic:Graphic;
-		/** @private */
-		private var _point:Point = FP.point;
-		/** @private */
-		private var _camera:Point = FP.point2;
+		/** @private */ internal var _graphic:Graphic;
+		/** @private */ private var _point:Point = FP.point;
+		/** @private */ private var _camera:Point = FP.point2;
 	}
 }

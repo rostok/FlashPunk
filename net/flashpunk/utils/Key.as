@@ -101,6 +101,12 @@
 		public static const NUMPAD_MULTIPLY:int = 106;
 		public static const NUMPAD_SUBTRACT:int = 109;
 		
+		public static const SEMICOLON:int = 186;
+		public static const QUOTE:int = 222;
+		public static const COMMA:int = 188;
+		public static const DOT:int = 190;
+		public static const SLASH:int = 191;
+
 		/**
 		 * Returns the name of the key.
 		 * @param	char		The key to name.

@@ -205,7 +205,7 @@
 			_last = _time;
 			
 			// update console
- 			if (FP._console) FP._console.update();
+			if (FP._console) FP._console.update();
 			
 			// update loop
 			if (!paused) update();
