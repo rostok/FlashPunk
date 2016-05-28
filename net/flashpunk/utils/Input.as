@@ -406,6 +406,26 @@
 			FP.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
+		public static function overrideInput(type:String, evnt:*):void 
+		{
+			var k:int;
+			switch (type) {
+				case KeyboardEvent.KEY_DOWN: 
+								for each (k in keys(evnt)) {
+									onKeyDown(new KeyboardEvent(type, true, false, 0, k));
+									break;
+								}
+								
+								break;
+				case KeyboardEvent.KEY_UP: 	
+								for each (k in keys(evnt)) {
+									onKeyUp(new KeyboardEvent(type, true, false, 0, k));
+									break;
+								}
+								break;
+			}
+		}
+
 		// Max amount of characters stored by the keystring.
 		/** @private */ private static const KEYSTRING_MAX:uint = 100;
 		

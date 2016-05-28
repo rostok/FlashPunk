@@ -244,10 +244,10 @@ package net.flashpunk.graphics
 			if (_tint) _buffer.colorTransform(_bufferRect, _tint);
 		}
 		
+		// rostok
 		/**
 		 * Clears the image buffer.
 		 */
-		// rostok
 		public function clear(color:uint=0):void
 		{
 			_buffer.fillRect(_bufferRect, color);
@@ -451,13 +451,14 @@ package net.flashpunk.graphics
 		}
 		
 		// rostok
-		// get the source
+		// get the image BitmapData source
 		public function getSource():BitmapData 
 		{
 			return _source;
 		}
 		
-		// rostok tint procs
+		// rostok 
+		// ste tint to normal 
 		public function normal():void 
 		{
 			color = 0x00FFFFFF;
@@ -465,6 +466,7 @@ package net.flashpunk.graphics
 			tintMode = Image.TINTING_MULTIPLY
 		}
 		
+		// rostok 
 		// whiten the image 0-normal 1-full white
 		public function whiten(factor:Number):void 
 		{
@@ -474,6 +476,7 @@ package net.flashpunk.graphics
 			tintMode = factor;
 		}
 		
+		// rostok 
 		// darken the image 0-normal 1-full black
 		public function darken(factor:Number):void 
 		{

@@ -226,7 +226,6 @@
 			updateBuffer();
 		}
 		
-		
 		// rostok
 		// returns current anim framecount
 		public function getCurrentAnimFrameCount():int
@@ -235,9 +234,65 @@
 		}
 
 		// rostok 
+		// returns current animation
 		public function getCurrentAnim():Anim
 		{
 			return _anim;
+		}
+		
+		// rostok
+		// returns all anims
+		public function getAnims():Object
+		{
+			return _anims;
+		}
+
+		// rostok
+		// adds new anim that is reversed source anim
+		public function addReversed(newName:String, sourceName:String):Anim
+		{
+			return add( newName, _anims[sourceName].frames.concat().reverse(), _anims[sourceName]._frameRate, _anims[sourceName]._loop );
+		}
+
+		// rostok
+		// changes chosen anim by adding reversed frames for example from [0,1,2] to [0,1,2,1,0]
+		public function pingPongify(animName:String):void 
+		{
+			var a:Array = _anims[animName].frames.concat().reverse();
+			a.shift();
+			//_anims[animName].frames = _anims[animName].frames.concat( a );
+			for each(var i:int in a) _anims[animName].frames.push(a);
+		}
+		
+		// rostok
+		// adds new anim than is subanim of source
+		public function addSubAnim(newName:String, sourceName:String, startIndex:int, length:int):Anim 
+		{
+			return add(newName, _anims[sourceName].frames.concat().splice(startIndex, length), _anims[sourceName]._frameRate, _anims[sourceName]._loop );
+		}
+		
+		// rostok
+		// returns Anim object by name
+		public function getAnim(animName:String):Anim
+		{
+			return _anims[animName];
+		}
+
+		// rostok
+		/**
+		 * changes animations speeed
+		 * @param	animName the name
+		 * @param	frameRate the new framerate or multiplication factor
+		 * @param	multiply set to true if you want to multiply instead of setting
+		 */
+		public function changeSpeed(animName:String, frameRate:Number, multiply:Boolean = false):void
+		{
+			var a : Anim = getAnim(animName);
+			if (!a) return;
+			if (multiply) 
+				a.frameRate *= frameRate;
+			else 
+				a.frameRate = frameRate;
 		}
 		
 		/**

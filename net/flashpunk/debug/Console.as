@@ -469,6 +469,8 @@ package net.flashpunk.debug
 			_selecting = true;
 			_entRect.x = Input.mouseFlashX;
 			_entRect.y = Input.mouseFlashY;
+			//_entRect.x = Input.mouseX;
+			//_entRect.y = Input.mouseY;
 			_entRect.width = 0;
 			_entRect.height = 0;
 		}
@@ -478,6 +480,8 @@ package net.flashpunk.debug
 		{
 			_entRect.width = Input.mouseFlashX - _entRect.x;
 			_entRect.height = Input.mouseFlashY - _entRect.y;
+			//_entRect.width = Input.mouseX - _entRect.x;
+			//_entRect.height = Input.mouseY - _entRect.y;
 			if (Input.mouseReleased)
 			{
 				selectEntities(_entRect);
@@ -895,7 +899,7 @@ package net.flashpunk.debug
 		/** @private */ private const SELECT_LIST:Vector.<Entity> = new Vector.<Entity>;
 		
 		// Watch information.
-		/** @private */ private const WATCH_LIST:Vector.<String> = Vector.<String>(["x", "y"]);
+		/** @private */ private const WATCH_LIST:Vector.<String> = Vector.<String>(["name", "x", "y", "layer"]);
 		
 		// Embedded assets.
 		[Embed(source = 'console_logo.png')] private const CONSOLE_LOGO:Class;

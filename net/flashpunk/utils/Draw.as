@@ -422,6 +422,20 @@
 			}
 		}
 		
+		/** rostok
+		 * draw arrow from p1 to p2
+		 */
+		public static function arrow(p1x:Number, p1y:Number, p2x:Number, p2y:Number, c:int = 0xFFFFFF, h:Number = 8, w:Number = 6):void 
+		{
+			Draw.line(p1x, p1y, p2x, p2y, c);
+			var p:Point = new Point(p1x - p2x, p1y - p2y);
+			p.normalize(h);
+			var q:Point = new Point(-p.y, p.x);
+			q.normalize(w/2);
+			Draw.line(p2x, p2y, p2x + p.x + q.x, p2y + p.y + q.y, c);
+			Draw.line(p2x, p2y, p2x + p.x - q.x, p2y + p.y - q.y, c);
+		}
+		
 		/**
 		 * Draws a quadratic curve.
 		 * @param	x1		X start.

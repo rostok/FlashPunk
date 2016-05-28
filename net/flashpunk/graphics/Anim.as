@@ -46,6 +46,12 @@
 		 */
 		public function get frameRate():Number { return _frameRate; }
 		
+		// rostok
+		/**
+		 * Set Animation speed.
+		 */
+		public function set frameRate(val:Number):void { _frameRate = val; }
+		
 		/**
 		 * Amount of frames in the animation.
 		 */

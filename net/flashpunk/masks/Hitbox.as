@@ -148,7 +148,7 @@
 			projection.min = min;
 			projection.max = max;
 		}
-		
+
 		// Hitbox information.
 		/** @private */ internal var _width:uint;
 		/** @private */ internal var _height:uint;
