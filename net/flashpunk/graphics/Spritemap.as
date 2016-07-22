@@ -85,6 +85,7 @@
 		/** @private Updates the animation. */
 		override public function update():void 
 		{
+			_lastindex = index;
 			if (_anim && !complete)
 			{
 				var timeAdd:Number = _anim._frameRate * rate;
@@ -272,6 +273,13 @@
 		}
 		
 		// rostok
+		// adds new anim that combines anims
+		public function addConcat(newName:String, source1:String, source2:String):Anim
+		{
+			return add(newName, _anims[source1].frames.concat().concat(_anims[source2].frames.concat()), _anims[source1]._frameRate, _anims[source1]._loop );
+		}
+		
+		// rostok
 		// returns Anim object by name
 		public function getAnim(animName:String):Anim
 		{
@@ -295,6 +303,8 @@
 				a.frameRate = frameRate;
 		}
 		
+		// rostok
+		public function get lastindex():uint { return _anim ? _lastindex : 0; }
 		/**
 		 * Current index of the playing animation.
 		 */
@@ -347,10 +357,11 @@
 		/** @private */ protected var _frameHeight:uint = 0;
 		/** @private */ private var _columns:uint;
 		/** @private */ private var _rows:uint;
-		/** @private */ private var _frameCount:uint;
+		/** @private */ protected var _frameCount:uint;
 		/** @private */ private var _anims:Object = { };
 		/** @private */ private var _anim:Anim;
 		/** @private */ private var _index:uint;
+		/** @private */ private var _lastindex:uint; // rostok: previous index, used to see if there was change in animation
 		/** @private */ protected var _frame:uint;
 		/** @private */ private var _timer:Number = 0;
 	}

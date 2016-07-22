@@ -6,9 +6,10 @@
 	import net.flashpunk.FP;
 
 	/**
-	 * Atlas-optimized Spritemap. 
+	 * Atlas-optimized Spritemap, ver. 1.1 2016-07-23
 	 * 
 	 * To use this class:
+	 * 0. Spritemap::_frameCount must be protected, not private
 	 * 1. init the variable: 
 	 * var s:SpritemapAtlas = new SpritemapAtlas(SOURCE, frameWidth, frameHeight, ...);
 	 * 2. add all the frames (note: order is important and you must add all the frames): 
@@ -19,14 +20,11 @@
 	 */
 	public class SpritemapAtlas extends Spritemap
 	{
-		public var frameInfo:Vector.<Vector.<Number>>;
+		public var frameInfo:Vector.<Vector.<Number>> = null;
 		
 		public function SpritemapAtlas(source:*, frameWidth:uint = 0, frameHeight:uint = 0, callback:Function = null) 
 		{
-			frameInfo = new Vector.<Vector.<Number>>;
-			addFrameInfo(0, 0, 0, 0, 0, 0);
 			super(source, frameWidth, frameHeight, callback);
-			_frameCount = 0;
 		}
 		
 		/**
@@ -34,7 +32,16 @@
 		 */
 		public function addFrameInfo(x:Number, y:Number, width:Number, height:Number, xOffset:Number, yOffset:Number):void 
 		{
-			frameInfo[_frameCount++] = new <Number>[x,y,width,height,xOffset,yOffset];
+			// unless addFrameInfo() is called this acts as a normal Spritemap class
+			if (!frameInfo)
+			{
+				// otherwise init everything
+				frameInfo = new Vector.<Vector.<Number>>;
+				//addFrameInfo(0, 0, 0, 0, 0, 0);
+				_frameCount = 0;
+			}
+
+			frameInfo[_frameCount++] = new <Number>[x, y, width, height, xOffset, yOffset];
 		}
 		
 		/**
@@ -42,6 +49,13 @@
 		 */
 		override public function updateBuffer(clearBefore:Boolean = false):void 
 		{
+		    // act like normal SpriteMap
+			if (!frameInfo)
+			{
+				super.updateBuffer(clearBefore);
+				return;
+			}
+
 			// get position of the current frame
 			_rect.x = frameInfo[_frame][0];
 			_rect.y = frameInfo[_frame][1];
