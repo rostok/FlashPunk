@@ -1,6 +1,9 @@
-﻿CHANGES
+CHANGES
 =======
-My custom version with looping sounds and some extra drawing and sprite functions.
+My custom version with:
+* looping sounds
+* some extra drawing and sprite functions
+* sprites defined by geometry (vertices, UV data) and texture and rendered with Context3D
 
 ABOUT
 =====
