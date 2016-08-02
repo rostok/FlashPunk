@@ -61,7 +61,16 @@
 			_rect.y = frameInfo[_frame][1];
 			_rect.width = frameInfo[_frame][2];
 			_rect.height = frameInfo[_frame][3];
-			if (_flipped) _rect.x = (_width - _rect.width) - _rect.x;
+			var ofsX:Number = frameInfo[_frame][4];
+			if (_flipped) {
+				// for flipped spritemaps, second flipped source is created
+				// in order to copyPixels() rather than transform
+				// in such case source rect.x must be flipped
+				// however offset is calculated from the end of the sprite
+				// note that Y ofset remains unchanged
+				_rect.x = (_width - _rect.width) - _rect.x;
+				ofsX = _frameWidth - frameInfo[_frame][2] - ofsX;
+			}
 			
 			// changed from the image
 			if (locked)
@@ -72,7 +81,7 @@
 			}
 			if (!_source) return;
 			_buffer.fillRect(_bufferRect, 0);
-			_buffer.copyPixels(_source, _sourceRect, new Point(frameInfo[_frame][4],frameInfo[_frame][5]), _drawMask, FP.zero);
+			_buffer.copyPixels(_source, _sourceRect, new Point(ofsX, frameInfo[_frame][5]), _drawMask, FP.zero);
 			if (_tint) _buffer.colorTransform(_bufferRect, _tint);
 		}
 	}
