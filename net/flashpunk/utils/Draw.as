@@ -157,11 +157,11 @@
 		 */
 		public static function linePlus(x1:Number, y1:Number, x2:Number, y2:Number, color:uint = 0xFF000000, alpha:Number = 1, thick:Number = 1):void
 		{
-			_graphics.clear();
+			graphicsClear();
 			_graphics.lineStyle(thick, color, alpha, false, LineScaleMode.NONE);
 			_graphics.moveTo(x1 - _camera.x, y1 - _camera.y);
 			_graphics.lineTo(x2 - _camera.x, y2 - _camera.y);
-			_target.draw(FP.sprite, null, null, blend);
+			targetDraw();
 		}
 		
 		/**
@@ -177,10 +177,10 @@
 		public static function rect(x:Number, y:Number, width:Number, height:Number, color:uint = 0xFFFFFF, alpha:Number = 1, overwrite:Boolean = false):void
 		{
 			if (! overwrite && (alpha < 1 || blend)) {
-				_graphics.clear();
+				graphicsClear();
 				_graphics.beginFill(color & 0xFFFFFF, alpha);
 				_graphics.drawRect(x - _camera.x, y - _camera.y, width, height);
-				_target.draw(FP.sprite, null, null, blend);
+				targetDraw();
 				return;
 			}
 			
@@ -207,7 +207,7 @@
 		public static function rectPlus(x:Number, y:Number, width:Number, height:Number, color:uint = 0xFFFFFF, alpha:Number = 1, fill:Boolean = true, thick:Number = 1, radius:Number = 0):void
 		{
 			if (color > 0xFFFFFF) color = 0xFFFFFF & color;
-			_graphics.clear();
+			graphicsClear();
 			
 			if (fill) {
 				_graphics.beginFill(color, alpha);
@@ -221,7 +221,7 @@
 				_graphics.drawRoundRect(x - _camera.x, y - _camera.y, width, height, radius);
 			}
 			
-			_target.draw(FP.sprite, null, null, blend);
+			targetDraw();
 		}
 		
 		/**
@@ -279,7 +279,7 @@
 		 */
 		public static function circlePlus(x:Number, y:Number, radius:Number, color:uint = 0xFFFFFF, alpha:Number = 1, fill:Boolean = true, thick:Number = 1):void
 		{
-			_graphics.clear();
+			graphicsClear();
 			if (fill)
 			{
 				_graphics.beginFill(color & 0xFFFFFF, alpha);
@@ -291,7 +291,7 @@
 				_graphics.lineStyle(thick, color & 0xFFFFFF, alpha);
 				_graphics.drawCircle(x - _camera.x, y - _camera.y, radius);
 			}
-			_target.draw(FP.sprite, null, null, blend);
+			targetDraw();
 		}
 
 		/**
@@ -409,6 +409,7 @@
 		 */ 
 		public static function drawCapsule(p1x:Number,p1y:Number,p2x:Number,p2y:Number,r:Number,c:int=0xFFFFFF):void 
 		{
+			startDelayedTargetDraw();
 			Draw.circle(p1x, p1y, r, c);
 			Draw.circle(p2x, p2y, r, c);
 			var dx:Number = p1x - p2x;
@@ -420,6 +421,7 @@
 				Draw.line(p1x - dy, p1y + dx, p2x - dy, p2y + dx, c);
 				Draw.line(p1x + dy, p1y - dx, p2x + dy, p2y - dx, c);
 			}
+			endDelayedTargetDraw();
 		}
 		
 		/** rostok
@@ -427,6 +429,7 @@
 		 */
 		public static function arrow(p1x:Number, p1y:Number, p2x:Number, p2y:Number, c:int = 0xFFFFFF, h:Number = 8, w:Number = 6):void 
 		{
+			startDelayedTargetDraw();
 			Draw.line(p1x, p1y, p2x, p2y, c);
 			var p:Point = new Point(p1x - p2x, p1y - p2y);
 			p.normalize(h);
@@ -434,6 +437,7 @@
 			q.normalize(w/2);
 			Draw.line(p2x, p2y, p2x + p.x + q.x, p2y + p.y + q.y, c);
 			Draw.line(p2x, p2y, p2x + p.x - q.x, p2y + p.y - q.y, c);
+			endDelayedTargetDraw();
 		}
 		
 		/**
@@ -449,11 +453,11 @@
 		 */
 		public static function curve(x1:Number, y1:Number, x2:Number, y2:Number, x3:Number, y3:Number, color:uint = 0, alpha:Number = 1, thick:Number = 1):void
 		{
-			_graphics.clear();
+			graphicsClear();
 			_graphics.lineStyle(thick, color & 0xFFFFFF, alpha);
 			_graphics.moveTo(x1 - _camera.x, y1 - _camera.y);
 			_graphics.curveTo(x2 - _camera.x, y2 - _camera.y, x3 - _camera.x, y3 - _camera.y);
-			_target.draw(FP.sprite, null, null, blend);
+			targetDraw();
 		}
 		
 		/**
@@ -506,6 +510,89 @@
 			var textGfx:Text = new Text(text, x, y, options);
 
 			textGfx.render(_target, FP.zero, _camera);
+		}
+
+		// rostok
+		/**
+		 * simple dashed rectangle
+		 * @param	x			X position of the rectangle.
+		 * @param	y			Y position of the rectangle.
+		 * @param	width		Width of the rectangle.
+		 * @param	height		Height of the rectangle.
+		 * @param	color		Color of the rectangle.
+		 * @param	step		dashed line step
+		 */
+		public static function rectDashed(x:Number, y:Number, width:Number, height:Number, color:uint = 0xFFFFFF, step:Number = 16, alpha:Number = 1):void
+		{
+			startDelayedTargetDraw();
+			for (var k:Number = x - height; k < x + width; k += step)
+			{
+				var sx:Number = k;
+				var sy:Number = y;
+				var ex:Number = k+height;
+				var ey:Number = y+height;
+				var b:Number;
+				b = x - sx;
+				if (b > 0) { sx += b; sy += b; }
+				b = ex - x - width;
+				if (b > 0) { ex -= b; ey -= b; }
+				
+				Draw.linePlus(sx, sy, ex, ey, color, alpha);
+			}
+			Draw.rectPlus(x, y, width, height, color, alpha, false);
+			endDelayedTargetDraw();
+		}
+		
+		public static function rectHorifilled(x:Number, y:Number, width:Number, height:Number, color:uint = 0xFFFFFF, step:Number = 16, alpha:Number=1):void
+		{
+			startDelayedTargetDraw();
+			Draw.rectPlus(x, y, width, height, color, alpha, false);
+			width += x;
+			for (var k:Number = y + step; k < y + height; k += step)
+				Draw.linePlus(x, k, width, k, color, alpha);
+				//Draw.line(x + 1, k, x + width - 1, k, color);
+			endDelayedTargetDraw();
+		}
+		
+		public static function rectVerifilled(x:Number, y:Number, width:Number, height:Number, color:uint = 0xFFFFFF, step:Number = 16, alpha:Number=1 ):void
+		{
+			startDelayedTargetDraw();
+			Draw.rectPlus(x, y, width, height, color, alpha, false);
+			height += y;
+			for (var k:Number = x + step; k < x + width; k += step)
+				Draw.linePlus(k, y, k, height, color, alpha);
+				//Draw.line(k, y + 1, k, y + height - 1, color);
+			endDelayedTargetDraw();
+		}
+		
+		// rostok
+		/**
+		 * clears graphics sprite only if no delayedTargetDraw is in place
+		 */
+		private static function graphicsClear():void { if (!_delayedTargetDraw) _graphics.clear();  }
+		/**
+		 * renders graphics sprite to target only if no delayedTargetDraw is in place
+		 */
+		private static function targetDraw():void { if (!_delayedTargetDraw) _target.draw(FP.sprite, null, null, blend);  }
+		/**
+		 * holds state of delayedTargetDraw, false by default
+		 */
+		private static var _delayedTargetDraw:Boolean = false;
+		/**
+		 * starts the delayed target draw, clears the _graphics
+		 */
+		private static function startDelayedTargetDraw():void 
+		{
+			_graphics.clear();
+			_delayedTargetDraw = true;
+		}
+		/**
+		 * ends delayedTargetDraw by drawing graphics to target
+		 */
+		private static function endDelayedTargetDraw():void
+		{
+			_delayedTargetDraw = false;
+			_target.draw(FP.sprite, null, null, blend);
 		}
 		
 		// Drawing information.
