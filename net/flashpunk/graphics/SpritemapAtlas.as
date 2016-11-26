@@ -1,12 +1,13 @@
 ﻿package net.flashpunk.graphics 
 {
+	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	import net.flashpunk.FP;
 
 	/**
-	 * Atlas-optimized Spritemap, ver. 1.1 2016-07-23
+	 * Atlas-optimized Spritemap, ver. 1.2 2016-08-15
 	 * 
 	 * To use this class:
 	 * 0. Spritemap::_frameCount must be protected, not private
@@ -42,6 +43,22 @@
 			}
 
 			frameInfo[_frameCount++] = new <Number>[x, y, width, height, xOffset, yOffset];
+		}
+
+		// this optimizes memory by not creating cached flipped buffer, instead slower matrix transform is used to draw sprite
+		// for more see Image.flipped setter
+		override public function get flipped():Boolean { return scaleX ==-1; }
+		override public function set flipped(value:Boolean):void { scaleX = value ? -1 : 1; }
+		
+		override public function render(target:BitmapData, point:Point, camera:Point):void 
+		{
+			var originX_real:Number = originX;
+			
+			if (scaleX == -1) originX = width - originX;
+			
+			super.render(target, point, camera);
+			
+			originX = originX_real;
 		}
 		
 		/**
