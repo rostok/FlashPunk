@@ -10,7 +10,7 @@ package net.flashpunk.graphics
 		
 		public function SpritemapTextured(source:*, frameWidth:uint=0, frameHeight:uint=0, callback:Function=null) 
 		{
-			super(source, frameHeight, frameHeight, callback);
+			super(source, frameWidth, frameHeight, callback);
 		}
 	}
 }
